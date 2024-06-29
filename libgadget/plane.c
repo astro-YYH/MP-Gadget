@@ -169,7 +169,8 @@ void write_plane(int snapnum, const double atime, Cosmology * CP, const char * O
             num_particles_plane = cutPlaneGaussianGrid(num_particles_tot,  comoving_distance, BoxSize, CP, atime, PlaneParams.Normals[j], PlaneParams.CutPoints[i], thickness, left_corner, plane_resolution, plane_result);
 
             /*sum up planes from all tasks*/
-            MPI_Reduce(MPI_IN_PLACE, plane_result, plane_resolution * plane_resolution, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+            // MPI_Reduce(MPI_IN_PLACE, plane_result, plane_resolution * plane_resolution, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
+            MPI_Reduce(ThisTask == 0 ? MPI_IN_PLACE : plane_result, plane_result, plane_resolution * plane_resolution, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
             MPI_Reduce(&num_particles_plane, &num_particles_plane_tot, 1, MPI_INT64, MPI_SUM, 0, MPI_COMM_WORLD);
 
             /*saving planes*/
